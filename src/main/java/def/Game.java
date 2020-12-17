@@ -198,7 +198,7 @@ class Game
         {
             while (input.hasNextLine())
             {
-                var command = input.nextLine();
+                String command = input.nextLine();
                 if (command.startsWith("QUIT"))
                 {
                     return;
