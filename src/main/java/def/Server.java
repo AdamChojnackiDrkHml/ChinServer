@@ -10,29 +10,47 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * A server for a multi-player tic tac toe game. Loosely based on an example in
- * Deitel and Deitel’s “Java How to Program” book. For this project I created a
- * new application-level protocol called TTTP (for Tic Tac Toe Protocol), which
- * is entirely plain text. The messages of TTTP are:
- *
- * Client -> Server MOVE <n> QUIT
- *
- * Server -> Client WELCOME <char> VALID_MOVE OTHER_PLAYER_MOVED <n>
- * OTHER_PLAYER_LEFT VICTORY DEFEAT TIE MESSAGE <text>
+ * A server for a multi-player Chinese checkers game.
  */
 public class Server 
 {
-
     public static void main(String[] args) throws Exception 
     {
         try (var listener = new ServerSocket(58900))
         {
-            System.out.println("Tic Tac Toe Server is Running...");
+            System.out.println("Chinese Checkers Server is Running...");
             ExecutorService pool = Executors.newFixedThreadPool(200);
-            while (true) {
+            while (true) 
+            {
                 Game game = new Game();
-                pool.execute(game.new Player(listener.accept(), 'X'));
-                pool.execute(game.new Player(listener.accept(), 'O'));
+                game.players = Integer.parseInt(args[0]);
+                if (game.players == 2)
+                {
+                	 pool.execute(game.new Player(listener.accept(), 1));
+                     pool.execute(game.new Player(listener.accept(), 2));	
+                }
+                else if (game.players == 3)
+                {
+               	 	pool.execute(game.new Player(listener.accept(), 1));
+                    pool.execute(game.new Player(listener.accept(), 2));	
+                    pool.execute(game.new Player(listener.accept(), 3));
+                }
+                else if (game.players == 4)
+                {
+               	 	pool.execute(game.new Player(listener.accept(), 1));
+                    pool.execute(game.new Player(listener.accept(), 2));	
+                    pool.execute(game.new Player(listener.accept(), 3));
+                    pool.execute(game.new Player(listener.accept(), 4));
+                }
+                else if (game.players == 6)
+                {
+               	 	pool.execute(game.new Player(listener.accept(), 1));
+                    pool.execute(game.new Player(listener.accept(), 2));	
+                    pool.execute(game.new Player(listener.accept(), 3));
+                    pool.execute(game.new Player(listener.accept(), 4));
+                    pool.execute(game.new Player(listener.accept(), 5));	
+                    pool.execute(game.new Player(listener.accept(), 6));
+                }
             }
         }
     }
