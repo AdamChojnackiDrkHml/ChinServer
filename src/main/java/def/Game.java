@@ -100,7 +100,7 @@ class Game
         {
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
-            output.println("WELCOME " + number);
+           // output.println("WELCOME " + number);
             if (players == 2)
             {
             	output.println("TWO");
