@@ -103,92 +103,111 @@ class Game
             output.println("WELCOME " + number);
             if (players == 2)
             {
+            	output.println("TWO");
             	if (number == 1)
                 {
                     currentPlayer = this;
+                    output.println("ONE");
                     output.println("MESSAGE Waiting for opponent to connect");
                 } 
                 else if (number == 2)
                 {
                     opponent = currentPlayer;
                     opponent.opponent = this;
+                    output.println("FOUR");
                     opponent.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 3)
             {
+            	output.println("THREE");
             	if (number == 1)
                 {
                     currentPlayer = this;
+                    output.println("ONE");
                     output.println("MESSAGE Waiting for opponents to connect");
                 } 
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
+                    output.println("THREE");
                     output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	this.opponent = currentPlayer;
+                	output.println("FIVE");
                 	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 4)
             {
+            	output.println("FOUR");
             	if (number == 1)
                 {
                     currentPlayer = this;
+                    output.println("ONE");
                     output.println("MESSAGE Waiting for opponents to connect");
                 } 
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
+                    output.println("TWO");
                     output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
+                	output.println("FOUR");
                 	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 4)
                 {
                 	currentPlayer.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
+                	output.println("FIVE");
                 	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 6)
             {
+            	output.println("SIX");
             	if (number == 1)
                 {
                     currentPlayer = this;
+                    output.println("ONE");
                     output.println("MESSAGE Waiting for opponents to connect");
                 } 
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
+                    output.println("TWO");
                     output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
+                	output.println("THREE");
                 	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 4)
                 {
                 	currentPlayer.opponent.opponent.opponent = this;
+                	output.println("FOUR");
                 	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 5)
                 {
                 	currentPlayer.opponent.opponent.opponent.opponent = this;
+                	output.println("FIVE");
                 	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 6)
                 {
                 	currentPlayer.opponent.opponent.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
+                	output.println("SIX");
                 	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
@@ -220,7 +239,8 @@ class Game
                 {
                     output.println("VICTORY");
                     opponent.output.println("DEFEAT");
-                } else if (boardFilledUp())
+                } 
+                else if (boardFilledUp())
                 {
                     output.println("TIE");
                     opponent.output.println("TIE");
