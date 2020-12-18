@@ -224,12 +224,16 @@ class Game
                 } 
                 else if (command.startsWith("MOVE"))
                 {
-                    processMoveCommand(Integer.parseInt(command.substring(5)));
+                	output.println("VALID_MOVE");
+                	String x = input.nextLine();
+                	output.println(x);
+                	System.out.println(x);
+                    //processMoveCommand(Integer.parseInt(command.substring(5)));
                 }
             }
         }
 
-        private void processMoveCommand(int location)
+        /*private void processMoveCommand(int location)
         {
             try
             {
@@ -250,6 +254,6 @@ class Game
             {
                 output.println("MESSAGE " + e.getMessage());
             }
-        }
+        }*/
     }
 }

@@ -16,7 +16,7 @@ public class Server
 {
     public static void main(String[] args) throws Exception 
     {
-        try (var listener = new ServerSocket(58900))
+        try (var listener = new ServerSocket(58902))
         {
             System.out.println("Chinese Checkers Server is Running...");
             ExecutorService pool = Executors.newFixedThreadPool(200);
