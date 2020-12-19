@@ -227,7 +227,7 @@ class Game
                 	output.println("VALID_MOVE");
                 	String x = input.nextLine();
                 	output.println(x);
-                	System.out.println(x);
+                	//System.out.println(x);
                     //processMoveCommand(Integer.parseInt(command.substring(5)));
                 }
             }
