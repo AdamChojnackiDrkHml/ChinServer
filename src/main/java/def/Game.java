@@ -3,6 +3,7 @@ package def;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ class Game
 
     // Board cells numbered 0-8, top to bottom, left to right; null if empty
     private Player[] board = new Player[9];
+    private ArrayList<Player> playersList = new ArrayList<>();
     Player currentPlayer;
 	public int players;
 
@@ -26,6 +28,13 @@ class Game
                 || (board[2] != null && board[2] == board[4] && board[2] == board[6]);
     }
 
+    public void notifyAllSockets(String message)
+    {
+        for(Player player : playersList)
+        {
+            player.output.println(message);
+        }
+    }
     public boolean boardFilledUp()
     {
         return Arrays.stream(board).allMatch(p -> p != null);
@@ -75,11 +84,11 @@ class Game
             {
                 setup();
                 processCommands();
-            } 
+            }
             catch (Exception e)
             {
                 e.printStackTrace();
-            } 
+            }
             finally
             {
                 if (this.opponent != null && this.opponent.output != null)
@@ -89,7 +98,7 @@ class Game
                 try
                 {
                     socket.close();
-                } 
+                }
                 catch (IOException e)
                 {
                 }
@@ -101,6 +110,7 @@ class Game
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
            // output.println("WELCOME " + number);
+            playersList.add(this);
             if (players == 2)
             {
             	output.println("TWO");
@@ -108,14 +118,14 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("MESSAGE Waiting for opponent to connect");
-                } 
+         //           output.println("MESSAGE Waiting for opponent to connect");
+                }
                 else if (number == 2)
                 {
                     opponent = currentPlayer;
                     opponent.opponent = this;
                     output.println("FOUR");
-                    opponent.output.println("MESSAGE Your move");
+          //          opponent.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 3)
@@ -125,20 +135,20 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("MESSAGE Waiting for opponents to connect");
-                } 
+          //          output.println("MESSAGE Waiting for opponents to connect");
+                }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("THREE");
-                    output.println("MESSAGE Waiting for opponents to connect");
+           //         output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("FIVE");
-                	currentPlayer.output.println("MESSAGE Your move");
+         //       	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 4)
@@ -148,26 +158,26 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("MESSAGE Waiting for opponents to connect");
-                } 
+          //          output.println("MESSAGE Waiting for opponents to connect");
+                }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("TWO");
-                    output.println("MESSAGE Waiting for opponents to connect");
+          //          output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	output.println("FOUR");
-                	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
+             //   	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 4)
                 {
                 	currentPlayer.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("FIVE");
-                	currentPlayer.output.println("MESSAGE Your move");
+           //     	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 6)
@@ -177,38 +187,38 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("MESSAGE Waiting for opponents to connect");
-                } 
+         //           output.println("MESSAGE Waiting for opponents to connect");
+                }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("TWO");
-                    output.println("MESSAGE Waiting for opponents to connect");
+         //           output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	output.println("THREE");
-                	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
+           //     	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 4)
                 {
                 	currentPlayer.opponent.opponent.opponent = this;
                 	output.println("FOUR");
-                	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
+          //      	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 5)
                 {
                 	currentPlayer.opponent.opponent.opponent.opponent = this;
                 	output.println("FIVE");
-                	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
+          //      	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 6)
                 {
                 	currentPlayer.opponent.opponent.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("SIX");
-                	currentPlayer.output.println("MESSAGE Your move");
+           //     	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
         }
@@ -221,19 +231,24 @@ class Game
                 if (command.startsWith("QUIT"))
                 {
                     return;
-                } 
+                }
                 else if (command.startsWith("MOVE"))
                 {
-                	output.println("VALID_MOVE");
+                //	output.println("VALID_MOVE");
                 	String x = input.nextLine();
-                	output.println(x);
-                	//System.out.println(x);
+                    System.out.println("dupa" + x);
+                	notifyAllSockets(x);
+                	System.out.println(x);
                     //processMoveCommand(Integer.parseInt(command.substring(5)));
+                }
+                else
+                {
+                    System.out.println(command);
                 }
             }
         }
 
-        /*private void processMoveCommand(int location)
+        private void processMoveCommand(int location)
         {
             try
             {
@@ -243,17 +258,18 @@ class Game
                 {
                     output.println("VICTORY");
                     opponent.output.println("DEFEAT");
-                } 
+                }
                 else if (boardFilledUp())
                 {
                     output.println("TIE");
                     opponent.output.println("TIE");
                 }
-            } 
+            }
             catch (IllegalStateException e)
             {
                 output.println("MESSAGE " + e.getMessage());
             }
-        }*/
+        }
     }
+
 }
