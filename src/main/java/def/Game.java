@@ -13,13 +13,13 @@ class Game
     private ArrayList<Player> playersList = new ArrayList<>();
     Player currentPlayer;
 	public int players;
-	private PlayerId winner;
-	int[][] ONEWins = {{16, 8}, {15, 7}, {15, 8}, {14, 7}, {14, 8}, {14, 9}, {13, 6}, {13, 7}, {13, 8}, {13, 9}};
-	int[][] TWOWins = {{12, 2}, {12, 3}, {12, 4}, {12, 5}, {11, 2}, {11, 3}, {11, 4}, {10, 3}, {10, 4}, {9, 3}};
-	int[][] THREEWins = {{7, 3}, {6, 3}, {6, 4}, {5, 2}, {5, 3}, {5, 4}, {4, 2}, {4, 3}, {4, 4}, {4, 5}};
-	int[][] FOURWins = {{3, 6}, {3, 7}, {3, 8}, {3, 9}, {2, 7}, {2, 8}, {2, 9}, {1, 7}, {1, 8}, {0, 8}};
-	int[][] FIVEWins = {{7, 12}, {6, 12}, {6, 13}, {5, 11}, {5, 12}, {5, 13}, {4, 11}, {4, 12}, {4, 13}, {4, 14}};
-	int[][] SIXWins = {{12, 11}, {12, 12}, {12, 13}, {12, 14}, {11, 11}, {11, 12}, {11, 13}, {10, 12}, {10, 13}, {9, 12}};
+	private PlayerId winner = PlayerId.ZERO;
+	int[][] ONEWins = {{3, 6}, {3, 7}, {3, 8}, {3, 9}, {2, 7}, {2, 8}, {2, 9}, {1, 7}, {1, 8}, {0, 8}};
+	int[][] TWOWins = {{7, 12}, {6, 12}, {6, 13}, {5, 11}, {5, 12}, {5, 13}, {4, 11}, {4, 12}, {4, 13}, {4, 14}};
+	int[][] THREEWins = {{12, 11}, {12, 12}, {12, 13}, {12, 14}, {11, 11}, {11, 12}, {11, 13}, {10, 12}, {10, 13}, {9, 12}};
+	int[][] FOURWins = {{16, 8}, {15, 7}, {15, 8}, {14, 7}, {14, 8}, {14, 9}, {13, 6}, {13, 7}, {13, 8}, {13, 9}};
+	int[][] FIVEWins = {{12, 2}, {12, 3}, {12, 4}, {12, 5}, {11, 2}, {11, 3}, {11, 4}, {10, 3}, {10, 4}, {9, 3}};
+	int[][] SIXWins = {{7, 3}, {6, 3}, {6, 4}, {5, 2}, {5, 3}, {5, 4}, {4, 2}, {4, 3}, {4, 4}, {4, 5}};
 
 	private void choosePools(int numOfPlayers)
     {
@@ -38,7 +38,6 @@ class Game
             }
         }
         board = standardGamePools.setUpBoardForPlayers(numOfPlayers, board);
-        System.out.println("tworzenie planszy");
     }
 	
 	private boolean isThisValidPool(int xCord, int yCord)
@@ -57,12 +56,40 @@ class Game
 	
     public boolean hasWinner()
     {
-    	int temp1 = 1;
-    	int temp2 = 1;
-    	int temp3 = 1;
-    	int temp4 = 1;
-    	int temp5 = 1;
-    	int temp6 = 1;
+    	int temp1 = 0;
+    	int temp2 = 0;
+    	int temp3 = 0;
+    	int temp4 = 0;
+    	int temp5 = 0;
+    	int temp6 = 0;
+    	
+    	if (players == 2)
+    	{
+    		temp1 = 1;
+    		temp4 = 1;
+    	}
+    	else if (players == 3)
+    	{
+    		temp1 = 1;
+    		temp3 = 1;
+    		temp5 = 1;
+    	}
+    	else if (players == 4)
+    	{
+    		temp1 = 1;
+    		temp2 = 1;
+    		temp4 = 1;
+    		temp5 = 1;
+    	}
+    	else if (players == 6)
+    	{
+    		temp1 = 1;
+        	temp2 = 1;
+        	temp3 = 1;
+        	temp4 = 1;
+        	temp5 = 1;
+        	temp6 = 1;
+    	}
     	
     	for (int i = 0; i < 10; i++)
     	{
@@ -96,27 +123,26 @@ class Game
     	{
     		winner = PlayerId.ONE;
     	}
-    	else if (temp1 == 2)
+    	else if (temp2 == 1)
     	{
     		winner = PlayerId.TWO;
     	}
-    	else if (temp1 == 3)
+    	else if (temp3 == 1)
     	{
     		winner = PlayerId.THREE;
     	}
-    	else if (temp1 == 4)
+    	else if (temp4 == 1)
     	{
     		winner = PlayerId.FOUR;
     	}
-    	else if (temp1 == 5)
+    	else if (temp5 == 1)
     	{
     		winner = PlayerId.FIVE;
     	}
-    	else if (temp1 == 6)
+    	else if (temp6 == 1)
     	{
     		winner = PlayerId.SIX;
     	}
-    	System.out.println("Winner is " + winner);
         
     	if (temp1 == 1 || temp2 == 1 || temp3 == 1 || temp4 == 1 || temp5 == 1 || temp6 == 1)
     	{
@@ -173,7 +199,6 @@ class Game
         {
             try
             {
-            	System.out.println("dupaaaa");
                 setup();
                 processCommands();
             }
@@ -342,7 +367,6 @@ class Game
         				System.out.println(x);
         				notifyAllSockets(x);
         				System.out.println(x);
-        				//processMoveCommand(Integer.parseInt(command.substring(5)));
         			}
         			else
         			{
@@ -350,6 +374,7 @@ class Game
         			}
         		}
         	}
+        	System.out.println("Winner is " + winner);
         	System.out.println("dobra dziala ide ukladac puzzle elo");
         }
 
