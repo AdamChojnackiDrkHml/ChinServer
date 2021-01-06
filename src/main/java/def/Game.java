@@ -9,23 +9,56 @@ import java.util.Scanner;
 
 class Game
 {
-
     // Board cells numbered 0-8, top to bottom, left to right; null if empty
     private Player[] board = new Player[9];
     private ArrayList<Player> playersList = new ArrayList<>();
     Player currentPlayer;
 	public int players;
+	private int winner;
+	int[][] ONEWins = {{16, 8}, {15, 7}, {15, 8}, {14, 7}, {14, 8}, {14, 9}, {13, 6}, {13, 7}, {13, 8}, {13, 9}};
+	int[][] TWOWins = {{12, 2}, {12, 3}, {12, 4}, {12, 5}, {11, 2}, {11, 3}, {11, 4}, {10, 3}, {10, 4}, {9, 3}};
+	int[][] THREEWins = {{7, 3}, {6, 3}, {6, 4}, {5, 2}, {5, 3}, {5, 4}, {4, 2}, {4, 3}, {4, 4}, {4, 5}};
+	int[][] FOURWins = {{3, 6}, {3, 7}, {3, 8}, {3, 9}, {2, 7}, {2, 8}, {2, 9}, {1, 7}, {1, 8}, {0, 8}};
+	int[][] FIVEWins = {{7, 12}, {6, 12}, {6, 13}, {5, 11}, {5, 12}, {5, 13}, {4, 11}, {4, 12}, {4, 13}, {4, 14}};
+	int[][] SIXWins = {{12, 11}, {12, 12}, {12, 13}, {12, 14}, {11, 11}, {11, 12}, {11, 13}, {10, 12}, {10, 13}, {9, 12}};
 
     public boolean hasWinner()
     {
-        return (board[0] != null && board[0] == board[1] && board[0] == board[2])
-                || (board[3] != null && board[3] == board[4] && board[3] == board[5])
-                || (board[6] != null && board[6] == board[7] && board[6] == board[8])
-                || (board[0] != null && board[0] == board[3] && board[0] == board[6])
-                || (board[1] != null && board[1] == board[4] && board[1] == board[7])
-                || (board[2] != null && board[2] == board[5] && board[2] == board[8])
-                || (board[0] != null && board[0] == board[4] && board[0] == board[8])
-                || (board[2] != null && board[2] == board[4] && board[2] == board[6]);
+    	int temp1 = 1;
+    	int temp2 = 1;
+    	int temp3 = 1;
+    	int temp4 = 1;
+    	int temp5 = 1;
+    	int temp6 = 1;
+    	
+    	for (int i = 0; i < 10; i++)
+    	{
+    		if (game.getGameBoard()[ONEWins[i][0]][ONEWins[i][1]] != "ONE")
+    		{
+    			temp1 = 0;
+    		}    
+    		if (game.getGameBoard()[TWOWins[i][0]][TWOWins[i][1]] != "TWO")
+    		{
+    			temp2 = 0;
+    		}
+    		if (game.getGameBoard()[THREEWins[i][0]][THREEWins[i][1]] != "THREE")
+    		{
+    			temp3 = 0;
+    		} 
+    		if (game.getGameBoard()[FOURWins[i][0]][FOURWins[i][1]] != "FOUR")
+    		{
+    			temp4 = 0;
+    		} 
+    		if (game.getGameBoard()[FIVEWins[i][0]][FIVEWins[i][1]] != "FIVE")
+    		{
+    			temp5 = 0;
+    		} 
+    		if (game.getGameBoard()[SIXWins[i][0]][SIXWins[i][1]] != "SIX")
+    		{
+    			temp6 = 0;
+    		} 
+       	}
+        
     }
 
     public void notifyAllSockets(String message)
