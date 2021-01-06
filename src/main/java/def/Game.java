@@ -305,13 +305,13 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-         //           output.println("MESSAGE Waiting for opponents to connect");
+                    output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("TWO");
-         //           output.println("MESSAGE Waiting for opponents to connect");
+                    output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
@@ -363,7 +363,7 @@ class Game
 
         	            board[yBeg][xBeg] = PlayerId.ZERO;
         	            board[yDest][xDest] = playerMovedId;
-        				String x = playerMovedId.toString() + " " + Integer.toString(xBeg) + " " + Integer.toString(yBeg) + " " + Integer.toString(xDest) + " " + Integer.toString(yDest);
+        				String x = playerMovedId.toString() + " " + xBeg + " " + yBeg + " " + xDest + " " + yDest;
         				System.out.println(x);
         				notifyAllSockets(x);
         				System.out.println(x);
