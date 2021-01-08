@@ -236,14 +236,13 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-         //           output.println("MESSAGE Waiting for opponent to connect");
+                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
                     opponent = currentPlayer;
                     opponent.opponent = this;
                     output.println("FOUR");
-          //          opponent.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 3)
@@ -253,20 +252,18 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-          //          output.println("MESSAGE Waiting for opponents to connect");
+                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("THREE");
-           //         output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("FIVE");
-         //       	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 4)
@@ -276,26 +273,23 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-          //          output.println("MESSAGE Waiting for opponents to connect");
+                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("TWO");
-          //          output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	output.println("FOUR");
-             //   	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 4)
                 {
                 	currentPlayer.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("FIVE");
-           //     	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
             else if (players == 6)
@@ -305,38 +299,33 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("MESSAGE Waiting for opponents to connect");
+                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
                     currentPlayer.opponent = this;
                     output.println("TWO");
-                    output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 3)
                 {
                 	currentPlayer.opponent.opponent = this;
                 	output.println("THREE");
-           //     	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 4)
                 {
                 	currentPlayer.opponent.opponent.opponent = this;
                 	output.println("FOUR");
-          //      	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 5)
                 {
                 	currentPlayer.opponent.opponent.opponent.opponent = this;
                 	output.println("FIVE");
-          //      	currentPlayer.output.println("MESSAGE Waiting for opponents to connect");
                 }
                 else if (number == 6)
                 {
                 	currentPlayer.opponent.opponent.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("SIX");
-           //     	currentPlayer.output.println("MESSAGE Your move");
                 }
             }
         }
@@ -354,7 +343,6 @@ class Game
         			}
         			else if (command.startsWith("MOVE"))
         			{
-        				//output.println("VALID_MOVE");
         				PlayerId playerMovedId = PlayerId.valueOf(input.next());
         	            int xBeg = Integer.parseInt(input.next());
         	            int yBeg = Integer.parseInt(input.next());
@@ -369,6 +357,11 @@ class Game
         				notifyAllSockets(x);
         				System.out.println(x);
         			}
+        			else if (command.startsWith("END"))
+        			{
+        				currentPlayer = currentPlayer.opponent;
+        				currentPlayer.output.println("YOUR MOVE");
+        			}
         			else
         			{
         				System.out.println(command);
@@ -376,27 +369,7 @@ class Game
         		}
         	}
         	System.out.println("Winner is " + winner);
-        	System.out.println("dobra dziala ide ukladac puzzle elo");
         }
-
-        /*private void processMoveCommand(int location)
-        {
-            try
-            {
-                move(location, this);
-                output.println("VALID_MOVE");
-                if (hasWinner())
-                {
-                	System.out.println("dobra dziala ide ukladac puzzle elo");
-                    output.println("VICTORY");
-                    opponent.output.println("DEFEAT, WINNER IS PLAYER " + winner);
-                }
-            }
-            catch (IllegalStateException e)
-            {
-                output.println("MESSAGE " + e.getMessage());
-            }
-        }*/
     }
 
 }
