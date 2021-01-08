@@ -363,6 +363,7 @@ class Game
 
         	            board[yBeg][xBeg] = PlayerId.ZERO;
         	            board[yDest][xDest] = playerMovedId;
+
         				String x = playerMovedId.toString() + " " + xBeg + " " + yBeg + " " + xDest + " " + yDest;
         				System.out.println(x);
         				notifyAllSockets(x);
