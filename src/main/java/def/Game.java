@@ -162,19 +162,6 @@ class Game
         }
     }
 
-    public synchronized void move(int location, Player player)
-    {
-        if (player != currentPlayer)
-        {
-            throw new IllegalStateException("Not your turn");
-        } 
-        else if (player.opponent == null)
-        {
-            throw new IllegalStateException("You don't have an opponent yet");
-        } 
-        currentPlayer = currentPlayer.opponent;
-    }
-
     /**
      * A Player is identified by a number. For
      * communication with the client the player has a socket and associated Scanner
@@ -227,7 +214,6 @@ class Game
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
             choosePools(players);
-           // output.println("WELCOME " + number);
             playersList.add(this);
             if (players == 2)
             {
@@ -236,7 +222,6 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
@@ -252,7 +237,6 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
@@ -273,7 +257,6 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
@@ -299,7 +282,6 @@ class Game
                 {
                     currentPlayer = this;
                     output.println("ONE");
-                    output.println("YOUR MOVE");
                 }
                 else if (number == 2)
                 {
@@ -332,6 +314,11 @@ class Game
 
         private void processCommands()
         {
+        	if (input.nextLine().equals("YOUR_MOVE"))
+        	{
+        		currentPlayer.output.println("YOUR_MOVE");
+        	}
+        	
         	while (!hasWinner())
         	{
         		while (input.hasNextLine())
@@ -352,7 +339,7 @@ class Game
         	            board[yBeg][xBeg] = PlayerId.ZERO;
         	            board[yDest][xDest] = playerMovedId;
 
-        				String x = playerMovedId.toString() + " " + xBeg + " " + yBeg + " " + xDest + " " + yDest;
+        				String x = "MOVE " + playerMovedId.toString() + " " + xBeg + " " + yBeg + " " + xDest + " " + yDest;
         				System.out.println(x);
         				notifyAllSockets(x);
         				System.out.println(x);
@@ -360,7 +347,7 @@ class Game
         			else if (command.startsWith("END"))
         			{
         				currentPlayer = currentPlayer.opponent;
-        				currentPlayer.output.println("YOUR MOVE");
+        				currentPlayer.output.println("YOUR_MOVE");
         			}
         			else
         			{
@@ -368,7 +355,9 @@ class Game
         			}
         		}
         	}
-        	System.out.println("Winner is " + winner);
+        	String win = "WINNER IS PLAYER " + winner;
+        	notifyAllSockets(win);
+        	System.out.println(win);
         }
     }
 
