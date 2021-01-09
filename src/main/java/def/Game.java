@@ -195,10 +195,8 @@ class Game
             }
             finally
             {
-                if (this.opponent != null && this.opponent.output != null)
-                {
-                    opponent.output.println("OTHER_PLAYER_LEFT");
-                }
+            	notifyAllSockets("QUIT");
+
                 try
                 {
                     socket.close();
@@ -228,6 +226,7 @@ class Game
                     opponent = currentPlayer;
                     opponent.opponent = this;
                     output.println("FOUR");
+					currentPlayer.output.println("YOUR_MOVE");
                 }
             }
             else if (players == 3)
@@ -248,6 +247,7 @@ class Game
                 	currentPlayer.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("FIVE");
+					currentPlayer.output.println("YOUR_MOVE");
                 }
             }
             else if (players == 4)
@@ -273,6 +273,7 @@ class Game
                 	currentPlayer.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("FIVE");
+					currentPlayer.output.println("YOUR_MOVE");
                 }
             }
             else if (players == 6)
@@ -308,21 +309,21 @@ class Game
                 	currentPlayer.opponent.opponent.opponent.opponent.opponent = this;
                 	this.opponent = currentPlayer;
                 	output.println("SIX");
+					currentPlayer.output.println("YOUR_MOVE");
                 }
             }
         }
 
         private void processCommands()
         {
-
         	
-        	while (!hasWinner())
-        	{
+
         		while (input.hasNextLine())
         		{
         			String command = input.nextLine();
         			if (command.startsWith("QUIT"))
         			{
+        				notifyAllSockets("QUIT" + input.next());
         				return;
         			}
         			else if (command.startsWith("MOVE"))
@@ -350,11 +351,14 @@ class Game
         			{
         				System.out.println(command);
         			}
+        			if(hasWinner())
+					{
+						String win = "WINNER IS PLAYER " + winner;
+						notifyAllSockets(win);
+						System.out.println(win);
+					}
         		}
-        	}
-        	String win = "WINNER IS PLAYER " + winner;
-        	notifyAllSockets(win);
-        	System.out.println(win);
+
         }
     }
 
