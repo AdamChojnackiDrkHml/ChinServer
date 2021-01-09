@@ -314,10 +314,7 @@ class Game
 
         private void processCommands()
         {
-        	if (input.nextLine().equals("YOUR_MOVE"))
-        	{
-        		currentPlayer.output.println("YOUR_MOVE");
-        	}
+
         	
         	while (!hasWinner())
         	{
