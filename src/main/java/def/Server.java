@@ -9,10 +9,13 @@ import java.util.concurrent.Executors;
  */
 public class Server 
 {
+	/**
+	 * Method main is responsible for adding right number of players connected to server.
+	 * @param args is the number of players
+	 * @throws Exception
+	 */
     public static void main(String[] args) throws Exception 
     {
-
-     //   ArrayList<Socket> sockets = new ArrayList<>();
         try (var listener = new ServerSocket(58901))
         {
             System.out.println("Chinese Checkers Server is Running...");
