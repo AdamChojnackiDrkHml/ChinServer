@@ -13,16 +13,16 @@ import java.util.Scanner;
 class Game
 {
 	private PlayerId[][] board = new PlayerId[17][17];
-	private StandardGamePools standardGamePools = new StandardGamePools();
-    private ArrayList<Player> playersList = new ArrayList<>();
+	private final StandardGamePools standardGamePools = new StandardGamePools();
+    private final ArrayList<Player> playersList = new ArrayList<>();
     Player currentPlayer;
 	private PlayerId winner = PlayerId.ZERO;
 	private int place = 1;
-	private NumberOfPlayers numberOfPlayers;
+	private final NumberOfPlayers numberOfPlayers;
 	/**
 	 * Array tableOfWinners shows which players have already won the game.
 	 */
-	private boolean[] tableOfWinners = {false, false, false, false, false, false};
+	private final boolean[] tableOfWinners = {false, false, false, false, false, false};
 	
 	/**
 	 * Arrays with winning conditions.
@@ -62,8 +62,8 @@ class Game
     }
 	
 	/**
-	 * @param xCord
-	 * @param yCord	 
+	 * @param xCord it is what it is
+	 * @param yCord	it is what it is
 	 * Method isThisValidPool checks if a field can be used in a game.
 	 */
 	private boolean isThisValidPool(int xCord, int yCord)
@@ -203,7 +203,7 @@ class Game
                 {
                     socket.close();
                 }
-                catch (IOException e)
+                catch (IOException ignored)
                 {
                 }
             }
@@ -213,7 +213,7 @@ class Game
          * Method setup is responsible for setting up the board for the right number of players.
          * It sets every next player as the opponent of previous one.
          * When last player joins the game, it sends a message that starts the game.
-         * @throws IOException
+         * @throws IOException no i co
          */
         private void setup() throws IOException
         {
