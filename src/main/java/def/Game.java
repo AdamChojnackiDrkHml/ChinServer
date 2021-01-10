@@ -19,6 +19,9 @@ class Game
 	public int players;
 	private PlayerId winner = PlayerId.ZERO;
 	private int place = 1;
+	/**
+	 * Array tableOfWinners shows which players have already won the game.
+	 */
 	private boolean[] tableOfWinners = {false, false, false, false, false, false};
 	
 	/**
@@ -73,12 +76,10 @@ class Game
     }
 	
 	/**
-	 * Method hasWinner checks if someone won the game.
-	 * If yes, @return true.
-	 * Every possible player has assigned variable temp.
-	 * Variables temp1-temp6 have value 0, until clients connect with server.
-	 * Then variable assigned to particular player changes to 1.
-	 * Next all variables are changed to 0 again, unless all counters fulfill the winning conditions.
+	 * Method isThisWin checks if someone won the game.
+	 * If yes, @return true, unless n-1 players have already won.
+	 * Array victoryPools assigns array with winning conditions to the right player.
+	 * When someone wins, isThisWin() adds them to array tableOfWinners.
 	 */
 	public boolean isThisWin()
 	{
