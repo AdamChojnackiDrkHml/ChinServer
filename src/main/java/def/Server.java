@@ -20,42 +20,43 @@ public class Server
         {
             System.out.println("Chinese Checkers Server is Running...");
             ExecutorService pool = Executors.newFixedThreadPool(200);
-            while (true) 
-            {
-                Game game = new Game();
-                game.players = Integer.parseInt(args[0]);
-                if (game.players == 2)
+
+                Game game = new Game(NumberOfPlayers.getFromIntString(args[0]));
+                switch (game.getNumberOfPlayers())
                 {
-                	 pool.execute(game.new Player(listener.accept(), 1));
-                     pool.execute(game.new Player(listener.accept(), 2));
-                     break;
+                    case TWO:
+                    {
+                        pool.execute(game.new Player(listener.accept(), PlayerId.ONE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.FOUR));
+                        break;
+                    }
+                    case THREE:
+                    {
+                        pool.execute(game.new Player(listener.accept(), PlayerId.ONE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.THREE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.FIVE));
+                        break;
+                    }
+                    case FOUR:
+                    {
+                        pool.execute(game.new Player(listener.accept(), PlayerId.ONE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.TWO));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.FOUR));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.FIVE));
+                        break;
+                    }
+                    case SIX:
+                    {
+                        pool.execute(game.new Player(listener.accept(), PlayerId.ONE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.TWO));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.THREE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.FOUR));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.FIVE));
+                        pool.execute(game.new Player(listener.accept(), PlayerId.SIX));
+                        break;
+                    }
                 }
-                else if (game.players == 3)
-                {
-               	 	pool.execute(game.new Player(listener.accept(), 1));
-                    pool.execute(game.new Player(listener.accept(), 2));
-                    pool.execute(game.new Player(listener.accept(), 3));
-                    break;
-                }
-                else if (game.players == 4)
-                {
-               	 	pool.execute(game.new Player(listener.accept(), 1));
-                    pool.execute(game.new Player(listener.accept(), 2));	
-                    pool.execute(game.new Player(listener.accept(), 3));
-                    pool.execute(game.new Player(listener.accept(), 4));
-                    break;
-                }
-                else if (game.players == 6)
-                {
-               	 	pool.execute(game.new Player(listener.accept(), 1));
-                    pool.execute(game.new Player(listener.accept(), 2));	
-                    pool.execute(game.new Player(listener.accept(), 3));
-                    pool.execute(game.new Player(listener.accept(), 4));
-                    pool.execute(game.new Player(listener.accept(), 5));	
-                    pool.execute(game.new Player(listener.accept(), 6));
-                    break;
-                }
-            }
+
         }
     }
 }

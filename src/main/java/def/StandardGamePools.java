@@ -79,23 +79,23 @@ public class StandardGamePools implements PlayerPoolsInteface
         return setBoardForFourPlayers(setUpperLeftPools(setBottomRightPools(pools)));
     }
 
-    public PlayerId[][] setUpBoardForPlayers(int numOfPlayers, PlayerId[][] pools)
+    public PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numberOfPlayers, PlayerId[][] pools)
     {
-        switch (numOfPlayers)
+        switch (numberOfPlayers)
         {
-            case 2:
+            case TWO:
             {
                 return setBoardForTwoPlayers(pools);
             }
-            case 3:
+            case THREE:
             {
                 return setBoardForThreePlayers(pools);
             }
-            case 4:
+            case FOUR:
             {
                 return setBoardForFourPlayers(pools);
             }
-            case 6:
+            case SIX:
             {
                 return setBoardForSixPlayers(pools);
             }

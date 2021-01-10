@@ -16,9 +16,9 @@ class Game
 	private StandardGamePools standardGamePools = new StandardGamePools();
     private ArrayList<Player> playersList = new ArrayList<>();
     Player currentPlayer;
-	public int players;
 	private PlayerId winner = PlayerId.ZERO;
 	private int place = 1;
+	private NumberOfPlayers numberOfPlayers;
 	/**
 	 * Array tableOfWinners shows which players have already won the game.
 	 */
@@ -33,11 +33,16 @@ class Game
 	int[][] FOURWins = {{16, 8}, {15, 7}, {15, 8}, {14, 7}, {14, 8}, {14, 9}, {13, 6}, {13, 7}, {13, 8}, {13, 9}};
 	int[][] FIVEWins = {{12, 2}, {12, 3}, {12, 4}, {12, 5}, {11, 2}, {11, 3}, {11, 4}, {10, 3}, {10, 4}, {9, 3}};
 	int[][] SIXWins = {{7, 3}, {6, 3}, {6, 4}, {5, 2}, {5, 3}, {5, 4}, {4, 2}, {4, 3}, {4, 4}, {4, 5}};
-	int[][][] wins = {ONEWins, TWOWins, THREEWins, FOURWins, FIVEWins, SIXWins};
+
+
+	public Game(NumberOfPlayers numberOfPlayers)
+	{
+		this.numberOfPlayers = numberOfPlayers;
+	}
 	/**
 	 * Method choosePools sets up the board for @param numOfPlayers players.
 	 */
-	private void choosePools(int numOfPlayers)
+	private void choosePools()
     {
         for(int i = 0; i < 17; i++)
         {
@@ -53,7 +58,7 @@ class Game
                 }
             }
         }
-        board = standardGamePools.setUpBoardForPlayers(numOfPlayers, board);
+        board = standardGamePools.setUpBoardForPlayers(numberOfPlayers, board);
     }
 	
 	/**
@@ -84,60 +89,53 @@ class Game
 	public boolean isThisWin()
 	{
 		int[][] victoryPools = new int[10][2];
-		PlayerId playerId = PlayerId.NULL;
-		switch(currentPlayer.number)
+		switch(currentPlayer.playerId)
 		{
-			case 1:
+			case ONE:
 			{
 				victoryPools = ONEWins;
-				playerId = PlayerId.ONE;
 				break;
 			}
-			case 2:
+			case TWO:
 			{
 				victoryPools = TWOWins;
-				playerId = PlayerId.TWO;
 				break;
 			}
-			case 3:
+			case THREE:
 			{
 				victoryPools = THREEWins;
-				playerId = PlayerId.THREE;
 				break;
 			}
-			case 4:
+			case FOUR:
 			{
 				victoryPools = FOURWins;
-				playerId = PlayerId.FOUR;
 				break;
 			}
-			case 5:
+			case FIVE:
 			{
 				victoryPools = FIVEWins;
-				playerId = PlayerId.FIVE;
 				break;
 			}
-			case 6:
+			case SIX:
 			{
 				victoryPools = SIXWins;
-				playerId = PlayerId.SIX;
 				break;
 			}
 		}
 
 		for(int i = 0; i < 10; i++)
 		{
-			if(board[victoryPools[i][0]][victoryPools[i][1]] != playerId)
+			if(board[victoryPools[i][0]][victoryPools[i][1]] != currentPlayer.playerId)
 			{
 				return false;
 			}
 		}
-		winner = playerId;
-		if(tableOfWinners[currentPlayer.number - 1])
+		winner = currentPlayer.playerId;
+		if(tableOfWinners[PlayerId.getInt(currentPlayer.playerId) - 1])
 		{
 			return false;
 		}
-		tableOfWinners[currentPlayer.number - 1] = true;
+		tableOfWinners[PlayerId.getInt(currentPlayer.playerId) - 1] = true;
 		return true;
 	}
 
@@ -153,23 +151,28 @@ class Game
         }
     }
 
-    /**
+	public NumberOfPlayers getNumberOfPlayers()
+	{
+		return numberOfPlayers;
+	}
+
+	/**
      * A Player is identified by a number. 
      * For communication with the client the player has a socket,
      * associated Scanner and PrintWriter.
      */
     class Player implements Runnable
     {
-        int number;
+        PlayerId playerId;
         Player opponent;
         Socket socket;
         Scanner input;
         PrintWriter output;
 
-        public Player(Socket socket, int number)
+        public Player(Socket socket, PlayerId playerId)
         {
             this.socket = socket;
-            this.number = number;
+            this.playerId = playerId;
         }
 
         /**
@@ -183,7 +186,10 @@ class Game
             try
             {
                 setup();
-                processCommands();
+                while (input.hasNextLine())
+				{
+					processCommands();
+				}
             }
             catch (Exception e)
             {
@@ -213,107 +219,140 @@ class Game
         {
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
-            choosePools(players);
+            choosePools();
             playersList.add(this);
-            if (players == 2)
-            {
-            	output.println("TWO");
-            	if (number == 1)
-                {
-                    currentPlayer = this;
-                    output.println("ONE");
-                }
-                else if (number == 2)
-                {
-                    opponent = currentPlayer;
-                    opponent.opponent = this;
-                    output.println("FOUR");
-					currentPlayer.output.println("YOUR_MOVE");
-                }
-            }
-            else if (players == 3)
-            {
-            	output.println("THREE");
-            	if (number == 1)
-                {
-                    currentPlayer = this;
-                    output.println("ONE");
-                }
-                else if (number == 2)
-                {
-                    currentPlayer.opponent = this;
-                    output.println("THREE");
-                }
-                else if (number == 3)
-                {
-                	currentPlayer.opponent.opponent = this;
-                	this.opponent = currentPlayer;
-                	output.println("FIVE");
-					currentPlayer.output.println("YOUR_MOVE");
-                }
-            }
-            else if (players == 4)
-            {
-            	output.println("FOUR");
-            	if (number == 1)
-                {
-                    currentPlayer = this;
-                    output.println("ONE");
-                }
-                else if (number == 2)
-                {
-                    currentPlayer.opponent = this;
-                    output.println("TWO");
-                }
-                else if (number == 3)
-                {
-                	currentPlayer.opponent.opponent = this;
-                	output.println("FOUR");
-                }
-                else if (number == 4)
-                {
-                	currentPlayer.opponent.opponent.opponent = this;
-                	this.opponent = currentPlayer;
-                	output.println("FIVE");
-					currentPlayer.output.println("YOUR_MOVE");
-                }
-            }
-            else if (players == 6)
-            {
-            	output.println("SIX");
-            	if (number == 1)
-                {
-                    currentPlayer = this;
-                    output.println("ONE");
-                }
-                else if (number == 2)
-                {
-                    currentPlayer.opponent = this;
-                    output.println("TWO");
-                }
-                else if (number == 3)
-                {
-                	currentPlayer.opponent.opponent = this;
-                	output.println("THREE");
-                }
-                else if (number == 4)
-                {
-                	currentPlayer.opponent.opponent.opponent = this;
-                	output.println("FOUR");
-                }
-                else if (number == 5)
-                {
-                	currentPlayer.opponent.opponent.opponent.opponent = this;
-                	output.println("FIVE");
-                }
-                else if (number == 6)
-                {
-                	currentPlayer.opponent.opponent.opponent.opponent.opponent = this;
-                	this.opponent = currentPlayer;
-                	output.println("SIX");
-					currentPlayer.output.println("YOUR_MOVE");
-                }
-            }
+            switch (numberOfPlayers)
+			{
+				case TWO:
+				{
+					output.println("TWO");
+					switch (playerId)
+					{
+						case ONE:
+						{
+							currentPlayer = this;
+							output.println("ONE");
+						}
+						case TWO:
+						{
+							opponent = currentPlayer;
+							opponent.opponent = this;
+							output.println("FOUR");
+							currentPlayer.output.println("YOUR_MOVE");
+							break;
+						}
+					}
+					break;
+				}
+				case THREE:
+				{
+					output.println("THREE");
+					switch (playerId)
+					{
+						case ONE:
+						{
+							currentPlayer = this;
+							output.println("ONE");
+							break;
+						}
+						case THREE:
+						{
+							currentPlayer.opponent = this;
+							output.println("THREE");
+							break;
+						}
+						case FIVE:
+						{
+							currentPlayer.opponent.opponent = this;
+							this.opponent = currentPlayer;
+							output.println("FIVE");
+							currentPlayer.output.println("YOUR_MOVE");
+							break;
+						}
+					}
+					break;
+				}
+				case FOUR:
+				{
+					output.println("FOUR");
+					switch (playerId)
+					{
+						case ONE:
+						{
+							currentPlayer = this;
+							output.println("ONE");
+							break;
+						}
+						case TWO:
+						{
+							currentPlayer.opponent = this;
+							output.println("TWO");
+							break;
+						}
+						case FOUR:
+						{
+							currentPlayer.opponent.opponent = this;
+							output.println("FOUR");
+							break;
+						}
+						case FIVE:
+						{
+							currentPlayer.opponent.opponent.opponent = this;
+							this.opponent = currentPlayer;
+							output.println("FIVE");
+							currentPlayer.output.println("YOUR_MOVE");
+							break;
+						}
+					}
+					break;
+				}
+				case SIX:
+				{
+					output.println("SIX");
+					switch (playerId)
+					{
+						case ONE:
+						{
+							currentPlayer = this;
+							output.println("ONE");
+							break;
+						}
+						case TWO:
+						{
+							currentPlayer.opponent = this;
+							output.println("TWO");
+							break;
+						}
+						case THREE:
+						{
+							currentPlayer.opponent.opponent = this;
+							output.println("THREE");
+							break;
+						}
+						case FOUR:
+						{
+							currentPlayer.opponent.opponent.opponent = this;
+							output.println("FOUR");
+							break;
+						}
+						case FIVE:
+						{
+							currentPlayer.opponent.opponent.opponent.opponent = this;
+							output.println("FIVE");
+							break;
+						}
+						case SIX:
+						{
+							currentPlayer.opponent.opponent.opponent.opponent.opponent = this;
+							this.opponent = currentPlayer;
+							output.println("SIX");
+							currentPlayer.output.println("YOUR_MOVE");
+							break;
+						}
+					}
+					break;
+				}
+			}
         }
 
         /**
@@ -326,8 +365,7 @@ class Game
          */
         private void processCommands()
         {
-        	while (input.hasNextLine())
-       		{
+
        			String command = input.nextLine();
        			if (command.startsWith("QUIT"))
        			{
@@ -366,7 +404,7 @@ class Game
 					notifyAllSockets(win);
 					System.out.println(win);
 				}
-       		}
+
         }
     }
 }

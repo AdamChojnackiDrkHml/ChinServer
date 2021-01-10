@@ -15,5 +15,5 @@ public interface PlayerPoolsInteface
     PlayerId[][] setBoardForFourPlayers(PlayerId[][] pools);
     PlayerId[][] setBoardForSixPlayers(PlayerId[][] pools);
 
-    PlayerId[][] setUpBoardForPlayers(int numOfPlayers, PlayerId[][] pools);
+    PlayerId[][] setUpBoardForPlayers(NumberOfPlayers numberOfPlayers, PlayerId[][] pools);
 }
