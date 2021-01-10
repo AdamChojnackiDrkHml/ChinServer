@@ -18,6 +18,8 @@ class Game
     Player currentPlayer;
 	public int players;
 	private PlayerId winner = PlayerId.ZERO;
+	private int place = 1;
+	private boolean[] tableOfWinners = {false, false, false, false, false, false};
 	
 	/**
 	 * Arrays with winning conditions.
@@ -28,7 +30,7 @@ class Game
 	int[][] FOURWins = {{16, 8}, {15, 7}, {15, 8}, {14, 7}, {14, 8}, {14, 9}, {13, 6}, {13, 7}, {13, 8}, {13, 9}};
 	int[][] FIVEWins = {{12, 2}, {12, 3}, {12, 4}, {12, 5}, {11, 2}, {11, 3}, {11, 4}, {10, 3}, {10, 4}, {9, 3}};
 	int[][] SIXWins = {{7, 3}, {6, 3}, {6, 4}, {5, 2}, {5, 3}, {5, 4}, {4, 2}, {4, 3}, {4, 4}, {4, 5}};
-
+	int[][][] wins = {ONEWins, TWOWins, THREEWins, FOURWins, FIVEWins, SIXWins};
 	/**
 	 * Method choosePools sets up the board for @param numOfPlayers players.
 	 */
@@ -78,105 +80,65 @@ class Game
 	 * Then variable assigned to particular player changes to 1.
 	 * Next all variables are changed to 0 again, unless all counters fulfill the winning conditions.
 	 */
-    public boolean hasWinner()
-    {
-    	int temp1 = 0;
-    	int temp2 = 0;
-    	int temp3 = 0;
-    	int temp4 = 0;
-    	int temp5 = 0;
-    	int temp6 = 0;
-    	
-    	if (players == 2)
-    	{
-    		temp1 = 1;
-    		temp4 = 1;
-    	}
-    	else if (players == 3)
-    	{
-    		temp1 = 1;
-    		temp3 = 1;
-    		temp5 = 1;
-    	}
-    	else if (players == 4)
-    	{
-    		temp1 = 1;
-    		temp2 = 1;
-    		temp4 = 1;
-    		temp5 = 1;
-    	}
-    	else if (players == 6)
-    	{
-    		temp1 = 1;
-        	temp2 = 1;
-        	temp3 = 1;
-        	temp4 = 1;
-        	temp5 = 1;
-        	temp6 = 1;
-    	}
-    	
-    	for (int i = 0; i < 10; i++)
-    	{
-    		if (board[ONEWins[i][0]][ONEWins[i][1]] != PlayerId.ONE)
-    		{
-    			temp1 = 0;
-    		}    
-    		if (board[TWOWins[i][0]][TWOWins[i][1]] != PlayerId.TWO)
-    		{
-    			temp2 = 0;
-    		}
-    		if (board[THREEWins[i][0]][THREEWins[i][1]] != PlayerId.THREE)
-    		{
-    			temp3 = 0;
-    		} 
-    		if (board[FOURWins[i][0]][FOURWins[i][1]] != PlayerId.FOUR)
-    		{
-    			temp4 = 0;
-    		} 
-    		if (board[FIVEWins[i][0]][FIVEWins[i][1]] != PlayerId.FIVE)
-    		{
-    			temp5 = 0;
-    		} 
-    		if (board[SIXWins[i][0]][SIXWins[i][1]] != PlayerId.SIX)
-    		{
-    			temp6 = 0;
-    		} 
-       	}
-    	
-    	if (temp1 == 1)
-    	{
-    		winner = PlayerId.ONE;
-    	}
-    	else if (temp2 == 1)
-    	{
-    		winner = PlayerId.TWO;
-    	}
-    	else if (temp3 == 1)
-    	{
-    		winner = PlayerId.THREE;
-    	}
-    	else if (temp4 == 1)
-    	{
-    		winner = PlayerId.FOUR;
-    	}
-    	else if (temp5 == 1)
-    	{
-    		winner = PlayerId.FIVE;
-    	}
-    	else if (temp6 == 1)
-    	{
-    		winner = PlayerId.SIX;
-    	}
-        
-    	if (temp1 == 1 || temp2 == 1 || temp3 == 1 || temp4 == 1 || temp5 == 1 || temp6 == 1)
-    	{
-    		return true;
-    	}
-    	else
-    	{
-    		return false;
-    	}
-    }
+	public boolean isThisWin()
+	{
+		int[][] victoryPools = new int[10][2];
+		PlayerId playerId = PlayerId.NULL;
+		switch(currentPlayer.number)
+		{
+			case 1:
+			{
+				victoryPools = ONEWins;
+				playerId = PlayerId.ONE;
+				break;
+			}
+			case 2:
+			{
+				victoryPools = TWOWins;
+				playerId = PlayerId.TWO;
+				break;
+			}
+			case 3:
+			{
+				victoryPools = THREEWins;
+				playerId = PlayerId.THREE;
+				break;
+			}
+			case 4:
+			{
+				victoryPools = FOURWins;
+				playerId = PlayerId.FOUR;
+				break;
+			}
+			case 5:
+			{
+				victoryPools = FIVEWins;
+				playerId = PlayerId.FIVE;
+				break;
+			}
+			case 6:
+			{
+				victoryPools = SIXWins;
+				playerId = PlayerId.SIX;
+				break;
+			}
+		}
+
+		for(int i = 0; i < 10; i++)
+		{
+			if(board[victoryPools[i][0]][victoryPools[i][1]] != playerId)
+			{
+				return false;
+			}
+		}
+		winner = playerId;
+		if(tableOfWinners[currentPlayer.number - 1])
+		{
+			return false;
+		}
+		tableOfWinners[currentPlayer.number - 1] = true;
+		return true;
+	}
 
     /**
      * Method notifyAllsockets is responsible for passing the message from server to all clients.
@@ -396,9 +358,10 @@ class Game
        			{
        				System.out.println(command);
        			}
-       			if(hasWinner())
+       			if(isThisWin())
 				{
-					String win = "WINNER IS PLAYER " + winner;
+					String win = "WINNER " + winner.name() + " " + place;
+					place++;
 					notifyAllSockets(win);
 					System.out.println(win);
 				}
