@@ -13,12 +13,12 @@ import java.util.Scanner;
  * Class game is responsible for setting up the board for right number of players
  * and checking if someone won the game.
  */
-class Game
+public class Game
 {
 	private PlayerId[][] board = new PlayerId[17][17];
 	private final StandardGamePools standardGamePools = new StandardGamePools();
     private final ArrayList<Player> playersList = new ArrayList<>();
-    Player currentPlayer;
+    private Player currentPlayer;
 	private PlayerId winner = PlayerId.ZERO;
 	private int place = 1;
 	private final NumberOfPlayers numberOfPlayers;
@@ -158,24 +158,29 @@ class Game
 	{
 		return numberOfPlayers;
 	}
+	public ArrayList<Player> getPlayersList()
+	{
+		return playersList;
+	}
 
 	/**
      * A Player is identified by a number. 
      * For communication with the client the player has a socket,
      * associated Scanner and PrintWriter.
      */
-    class Player implements Runnable
+	public class Player implements Runnable
     {
-        PlayerId playerId;
-        Player opponent;
-        Socket socket;
-        Scanner input;
-        PrintWriter output;
+        private final PlayerId playerId;
+        private Player opponent;
+        private final Socket socket;
+        private Scanner input;
+        private PrintWriter output;
 
         public Player(Socket socket, PlayerId playerId)
         {
             this.socket = socket;
             this.playerId = playerId;
+			playersList.add(this);
         }
 
         /**
@@ -223,7 +228,6 @@ class Game
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
             choosePools();
-            playersList.add(this);
             switch (numberOfPlayers)
 			{
 				case TWO:
@@ -369,45 +373,49 @@ class Game
         private void processCommands()
         {
 
-       			String command = input.nextLine();
-       			if (command.startsWith("QUIT"))
-       			{
-       				notifyAllSockets("QUIT" + input.next());
-       				return;
-       			}
-       			else if (command.startsWith("MOVE"))
-       			{
-       				PlayerId playerMovedId = PlayerId.valueOf(input.next());
-       	            int xBeg = Integer.parseInt(input.next());
-       	            int yBeg = Integer.parseInt(input.next());
-       	            int xDest = Integer.parseInt(input.next());
-       	            int yDest = Integer.parseInt(input.next());
+       		String command = input.nextLine();
+       		if (command.startsWith("QUIT"))
+       		{
+       			notifyAllSockets("QUIT" + input.next());
+       			return;
+       		}
+       		else if (command.startsWith("MOVE"))
+       		{
+       			PlayerId playerMovedId = PlayerId.valueOf(input.next());
+       	        int xBeg = Integer.parseInt(input.next());
+       	        int yBeg = Integer.parseInt(input.next());
+       	        int xDest = Integer.parseInt(input.next());
+       	        int yDest = Integer.parseInt(input.next());
 
-       	            board[yBeg][xBeg] = PlayerId.ZERO;
-       	            board[yDest][xDest] = playerMovedId;
+       	        board[yBeg][xBeg] = PlayerId.ZERO;
+       	        board[yDest][xDest] = playerMovedId;
 
-       				String x = "MOVE " + playerMovedId.toString() + " " + xBeg + " " + yBeg + " " + xDest + " " + yDest;
-       				System.out.println(x);
-       				notifyAllSockets(x);
-       				System.out.println(x);
-       			}
-       			else if (command.startsWith("END"))
-       			{
-       				currentPlayer = currentPlayer.opponent;
-       				currentPlayer.output.println("YOUR_MOVE");
-       			}
-       			else
-       			{
-       				System.out.println(command);
-       			}
-       			if(isThisWin())
-				{
-					String win = "WINNER " + winner.name() + " " + place;
-					place++;
-					notifyAllSockets(win);
-					System.out.println(win);
-				}
-
+       			String x = "MOVE " + playerMovedId.toString() + " " + xBeg + " " + yBeg + " " + xDest + " " + yDest;
+       			System.out.println(x);
+       			notifyAllSockets(x);
+       			System.out.println(x);
+       		}
+       		else if (command.startsWith("END"))
+       		{
+       			currentPlayer = currentPlayer.opponent;
+       			currentPlayer.output.println("YOUR_MOVE");
+       		}
+       		else
+       		{
+    		System.out.println(command);
+       		}
+       		if(isThisWin())
+			{
+				String win = "WINNER " + winner.name() + " " + place;
+				place++;
+				notifyAllSockets(win);
+				System.out.println(win);
+			}
         }
+
+        public PlayerId getPlayerId()
+		{
+			return playerId;
+		}
     }
 }
