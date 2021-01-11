@@ -1,3 +1,6 @@
+/**
+ * @author Elzbieta Wisniewska and Adam Chojnacki
+ */
 package def;
 
 import java.net.ServerSocket;

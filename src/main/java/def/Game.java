@@ -1,3 +1,6 @@
+/**
+ * @author Elzbieta Wisniewska and Adam Chojnacki
+ */
 package def;
 
 import java.io.IOException;
@@ -82,7 +85,7 @@ class Game
 	
 	/**
 	 * Method isThisWin checks if someone won the game.
-	 * If yes, @return true, unless n-1 players have already won.
+	 * If yes, @return true.
 	 * Array victoryPools assigns array with winning conditions to the right player.
 	 * When someone wins, isThisWin() adds them to array tableOfWinners.
 	 */
@@ -131,11 +134,11 @@ class Game
 			}
 		}
 		winner = currentPlayer.playerId;
-		if(tableOfWinners[PlayerId.getInt(currentPlayer.playerId) - 1])
+		if(tableOfWinners[PlayerId.getInt(winner) - 1])
 		{
 			return false;
 		}
-		tableOfWinners[PlayerId.getInt(currentPlayer.playerId) - 1] = true;
+		tableOfWinners[PlayerId.getInt(winner) - 1] = true;
 		return true;
 	}
 
@@ -213,7 +216,7 @@ class Game
          * Method setup is responsible for setting up the board for the right number of players.
          * It sets every next player as the opponent of previous one.
          * When last player joins the game, it sends a message that starts the game.
-         * @throws IOException no i co
+         * @throws IOException
          */
         private void setup() throws IOException
         {
@@ -233,7 +236,7 @@ class Game
 							currentPlayer = this;
 							output.println("ONE");
 						}
-						case TWO:
+						case FOUR:
 						{
 							opponent = currentPlayer;
 							opponent.opponent = this;
