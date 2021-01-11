@@ -1,3 +1,4 @@
+package Testy;
 
 import def.*;
 import org.junit.Test;

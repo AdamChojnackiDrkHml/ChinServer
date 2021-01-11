@@ -3,8 +3,10 @@
  */
 package def;
 
-public interface PlayerPoolsInteface
+public interface GameRulesInterface
 {
+    int BoardSize = 17;
+    int NumberOfPoolsInEnemyBase = 10;
     PlayerId[][] setUpperPools(PlayerId[][] pools);
     PlayerId[][] setUpperLeftPools(PlayerId[][] pools);
     PlayerId[][] setUpperRightPools(PlayerId[][] pools);

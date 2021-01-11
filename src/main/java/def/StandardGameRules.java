@@ -3,7 +3,7 @@
  */
 package def;
 
-public class StandardGamePools implements PlayerPoolsInteface
+public class StandardGameRules implements GameRulesInterface
 {
     int[][] UpperPools = {{0,8}, {1,7}, {1,8}, {2,7}, {2,8}, {2,9}, {3,6}, {3,7}, {3,8}, {3,9}};
     int[][] UpperLeftPools = {{4,2}, {4,3}, {4,4}, {4,5}, {5,2}, {5,3}, {5,4}, {6,3}, {6,4}, {7,3}};

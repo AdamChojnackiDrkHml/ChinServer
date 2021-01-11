@@ -15,8 +15,8 @@ import java.util.Scanner;
  */
 public class Game
 {
-	private PlayerId[][] board = new PlayerId[17][17];
-	private final StandardGamePools standardGamePools = new StandardGamePools();
+	private PlayerId[][] board = new PlayerId[GameRulesInterface.BoardSize][GameRulesInterface.BoardSize];
+	private final StandardGameRules standardGameRules = new StandardGameRules();
     private final ArrayList<Player> playersList = new ArrayList<>();
     private Player currentPlayer;
 	private PlayerId winner = PlayerId.ZERO;
@@ -47,9 +47,9 @@ public class Game
 	 */
 	private void choosePools()
     {
-        for(int i = 0; i < 17; i++)
+        for(int i = 0; i < GameRulesInterface.BoardSize; i++)
         {
-            for(int j = 0; j < 17; j++)
+            for(int j = 0; j < GameRulesInterface.BoardSize; j++)
             {
                 if(isThisValidPool(j,i))
                 {
@@ -61,7 +61,7 @@ public class Game
                 }
             }
         }
-        board = standardGamePools.setUpBoardForPlayers(numberOfPlayers, board);
+        board = standardGameRules.setUpBoardForPlayers(numberOfPlayers, board);
     }
 	
 	/**
@@ -91,7 +91,7 @@ public class Game
 	 */
 	public boolean isThisWin()
 	{
-		int[][] victoryPools = new int[10][2];
+		int[][] victoryPools = new int[GameRulesInterface.NumberOfPoolsInEnemyBase][2];
 		switch(currentPlayer.playerId)
 		{
 			case ONE:
