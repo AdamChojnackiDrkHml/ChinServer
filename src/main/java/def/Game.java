@@ -65,8 +65,8 @@ class Game
     }
 	
 	/**
-	 * @param xCord it is what it is
-	 * @param yCord	it is what it is
+	 * @param xCord
+	 * @param yCord
 	 * Method isThisValidPool checks if a field can be used in a game.
 	 */
 	private boolean isThisValidPool(int xCord, int yCord)
